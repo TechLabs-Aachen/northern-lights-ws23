@@ -152,7 +152,7 @@ def hourly_solarwind_for_average(dt,oi):
             else:
                 hourly_swdata.append(np.nanmean(swdata[hourmask]))
         sw4avg[swkey]=np.array(hourly_swdata)
-    return sw4avg
+    return sw4avg, sw
 
 @cache_omni_interval('1min')
 def calc_avg_solarwind(dt,oi):
@@ -168,7 +168,7 @@ def calc_avg_solarwind(dt,oi):
     """
     prev_hour_weight=0.65
 
-    sw4avg = hourly_solarwind_for_average(dt)
+    sw4avg, sw = hourly_solarwind_for_average(dt)
     n = sw4avg['jd'].size #Number of hourly datapoints to be averaged
     weights = [prev_hour_weight**n_hours_back for n_hours_back in range(n)[::-1]] #reverse the range
 
@@ -179,8 +179,8 @@ def calc_avg_solarwind(dt,oi):
     avgsw['Bz'] = np.nansum(sw4avg['Bz']*weights)/np.sum(weights)
     avgsw['V'] = np.nansum(sw4avg['V']*weights)/np.sum(weights)
     avgsw['Ec'] = np.nansum(sw4avg['Ec']*weights)/np.sum(weights)
-
-    return avgsw
+    print(avgsw['Ec'], "dd")
+    return avgsw, sw
 
 @cache_omni_interval('hourly')
 def get_daily_f107(dt,oi):
@@ -197,7 +197,8 @@ def get_daily_f107(dt,oi):
 
 def calc_dF(dt):
     """dF==newell coupling for Ovation Prime"""
-    return calc_avg_solarwind(dt)['Ec']
+    avgsolar, sw = calc_avg_solarwind(dt)
+    return avgsolar['Ec'], sw
 
 def robinson_auroral_conductance(numflux, eavg):
     """Robinson empirical formula for auroral conductance from

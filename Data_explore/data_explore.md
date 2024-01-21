@@ -25,4 +25,7 @@ There are four types of auroras: Diffusive (split in diffusive ions and electron
 
 Task: Extract Datasets (Labels) on OvationPyme
 
+ovation_utilities: read_solarwind(dt,oi) for solar wind data
+results in visual_test_ovation_prime
+
 ###

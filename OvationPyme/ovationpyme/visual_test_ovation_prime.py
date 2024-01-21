@@ -85,37 +85,39 @@ def draw_weighted_flux(dt, atype='diff', jtype='energy'):
     """
     estimator = ovation_prime.FluxEstimator(atype,jtype)
 
-    mlatgridN, mltgridN, fluxgridN = estimator.get_flux_for_time(dt, hemi='N')
-    mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, hemi='S')
+    mlatgridN, mltgridN, fluxgridN, sw = estimator.get_flux_for_time(dt, hemi='N')
+    #mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, hemi='S')
 
-    f = pp.figure(figsize=(11, 5))
-    aN = f.add_subplot(121)
-    aS = f.add_subplot(122)
+    #f = pp.figure(figsize=(11, 5))
+    #aN = f.add_subplot(121)
+    #aS = f.add_subplot(122)
 
-    XN, YN = satplottools.latlt2cart(mlatgridN.flatten(), mltgridN.flatten(), 'N')
-    XS, YS = satplottools.latlt2cart(mlatgridS.flatten(), mltgridS.flatten(), 'S')
+    #XN, YN = satplottools.latlt2cart(mlatgridN.flatten(), mltgridN.flatten(), 'N')
+    #XS, YS = satplottools.latlt2cart(mlatgridS.flatten(), mltgridS.flatten(), 'S')
 
-    XN = XN.reshape(mlatgridN.shape)
-    YN = YN.reshape(mltgridN.shape)
-    XS = XS.reshape(mlatgridS.shape)
-    YS = YS.reshape(mltgridS.shape)
+    #XN = XN.reshape(mlatgridN.shape)
+    #YN = YN.reshape(mltgridN.shape)
+    #XS = XS.reshape(mlatgridS.shape)
+    #YS = YS.reshape(mltgridS.shape)
 
-    satplottools.draw_dialplot(aN)
-    satplottools.draw_dialplot(aS)
-
-    mappableN = aN.pcolormesh(XN, YN, fluxgridN, vmin=0, vmax=2)
-    mappableS = aS.pcolormesh(XS, YS, fluxgridS, vmin=0, vmax=2)
+    #satplottools.draw_dialplot(aN)
+    #satplottools.draw_dialplot(aS)
+    np.savez_compressed("Data_results/Grids/"+str(dt).replace(":","-"),fluxgridN)
+    for key, value in sw.items():
+        np.savez_compressed(f"Data_results/{key}/{str(dt).replace(':','-')}",value)
+    #mappableN = aN.pcolormesh(XN, YN, fluxgridN, vmin=0, vmax=2)
+    #mappableS = aS.pcolormesh(XS, YS, fluxgridS, vmin=0, vmax=2)
 
     #aN.set_title("Northern Hemisphere Flux")
     #aS.set_title("Southern Hemisphere Flux")
 
-    f.colorbar(mappableN, ax=aN)
-    f.colorbar(mappableS, ax=aS)
+    #f.colorbar(mappableN, ax=aN)
+    #f.colorbar(mappableS, ax=aS)
 
-    f.suptitle("OvationPyme Auroral Model Flux Output at {0} \n AuroralType:{1}, FluxType:{2}".format(dt.strftime('%c'),
-                                                                                                      atype, jtype),
-                                                                                                      fontweight='bold')
-    return f
+    #f.suptitle("OvationPyme Auroral Model Flux Output at {0} \n AuroralType:{1}, FluxType:{2}".format(dt.strftime('%c'),
+                                                                                                      #atype, jtype),
+                                                                                                      #fontweight='bold')
+    #return fluxfridN
 
 def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='energy', dF = 2134.17):
     dF = 2134.17
@@ -169,37 +171,37 @@ def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='
 
 
 if __name__=='__main__':
-    seasonN = 'summer'
-    seasonS = 'winter'
+    seasonN = 'winter'
+    seasonS = 'summer'
     atype = 'diff'
     jtype = 'energy'
-    tfmt = '%Y%m%d'
+    tfmt = '%Y%m%d%H%M%S'
 
 
     #Times given in figure 2 of Cousins et. al. 2015
-    dt1 = datetime.datetime(2011, 11, 30, 12, 10, 0)
-    dt2 = datetime.datetime(2011, 11, 29, 7, 40, 0)
-    dt3 = datetime.datetime(2011, 11, 29, 0, 50, 0)
+    dt1 = datetime.datetime(2023, 2, 4, 0, 10, 0)
+    dt2 = datetime.datetime(2008, 5, 3, 12, 40, 0)
+    dt3 = datetime.datetime(2015, 9, 4, 6, 50, 0)
 
     for dt in [dt1, dt2, dt3]:
-        new_mlat, new_mlt = np.meshgrid(np.linspace(60., 80., 40.), np.linspace(2., 6., 30.))
-        fiN = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
-        fiN.savefig('ovation_conductance_interp_N_{0}.png'.format(dt.strftime(tfmt)))
+        new_mlat, new_mlt = np.meshgrid(np.linspace(60, 80, 40), np.linspace(2, 6, 30))
+        #fiN = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
+        #fiN.savefig('ovation_conductance_interp_N_{0}.png'.format(dt.strftime(tfmt)))
 
-        fiS = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
-        fiS.savefig('ovation_conductance_interp_S_{0}.png'.format(dt.strftime(tfmt)))
+        #fiS = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
+        #fiS.savefig('ovation_conductance_interp_S_{0}.png'.format(dt.strftime(tfmt)))
 
-        f2N = draw_conductance(dt, 'N')
-        f2N.savefig('ovation_conductance_N_{0}.png'.format(dt.strftime(tfmt)))
+        #f2N = draw_conductance(dt, 'N')
+        #f2N.savefig('ovation_conductance_N_{0}.png'.format(dt.strftime(tfmt)))
 
-        f2S = draw_conductance(dt, 'S')
-        f2S.savefig('ovation_conductance_S_{0}.png'.format(dt.strftime(tfmt)))
+        #f2S = draw_conductance(dt, 'S')
+        #f2S.savefig('ovation_conductance_S_{0}.png'.format(dt.strftime(tfmt)))
 
         f1 = draw_weighted_flux(dt)
-        f1.savefig('ovation_combflux_{0}_{1}_{2}.png'.format(atype, jtype, dt.strftime(tfmt)))
+        #f1.savefig('ovation_combflux_{0}_{1}_{2}.png'.format(atype, jtype, dt.strftime(tfmt)))
 
-        f3, f4 = draw_seasonal_flux(seasonN=seasonN, seasonS=seasonS, atype=atype, jtype=jtype)
-        f3.savefig('ovation_rawflux_N{0}_S{1}_{2}_{3}.png'.format(seasonN, seasonS, atype, jtype))
+        #f3, f4 = draw_seasonal_flux(seasonN=seasonN, seasonS=seasonS, atype=atype, jtype=jtype)
+        #f3.savefig('ovation_rawflux_N{0}_S{1}_{2}_{3}.png'.format(seasonN, seasonS, atype, jtype))
 
-        for f in [fiN, fiS, f2N, f2S, f1, f3, f4]:
-            pp.close(f)
+        #for f in [f1]:
+        #   pp.close(f)

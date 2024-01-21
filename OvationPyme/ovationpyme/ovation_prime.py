@@ -506,7 +506,7 @@ class FluxEstimator(object):
         else:
             raise ValueError('Invalid hemisphere {0} (use N or S)'.format(hemi))
 
-        dF = ovation_utilities.calc_dF(dt)
+        dF, sw = ovation_utilities.calc_dF(dt)
         if hasattr(self,'_dF'):
             log.warning(('Warning: Overriding real Newell Coupling {0}'.format(dF)
                            +'with secret instance property _dF {0}'.format(self._dF)
@@ -536,9 +536,9 @@ class FluxEstimator(object):
             grid_mlats = -1.*grid_mlats #by default returns positive latitudes
 
         if not return_dF:
-            return grid_mlats,grid_mlts,gridflux
+            return grid_mlats,grid_mlts,gridflux, sw
         else:
-            return grid_mlats,grid_mlts,gridflux,dF
+            return grid_mlats,grid_mlts,gridflux,dF, sw
 
 class SeasonalFluxEstimator(object):
     """
