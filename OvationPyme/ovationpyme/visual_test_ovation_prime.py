@@ -179,12 +179,17 @@ if __name__=='__main__':
 
 
     #Times given in figure 2 of Cousins et. al. 2015
-    dt1 = datetime.datetime(2023, 2, 4, 0, 10, 0)
-    dt2 = datetime.datetime(2008, 5, 3, 12, 40, 0)
-    dt3 = datetime.datetime(2015, 9, 4, 6, 50, 0)
+    #dt1 = datetime.datetime(2023, 2, 4, 0, 10, 0)
+    #dt2 = datetime.datetime(2008, 5, 3, 12, 40, 0)
+    #dt3 = datetime.datetime(2015, 9, 4, 6, 50, 0)
+    from tqdm import tqdm
+    start_date = datetime.datetime(2022, 6, 1, 0, 0)
+    days = [start_date+datetime.timedelta(minutes=30*i) for i in range(30*48)]
+    for i in tqdm(days):
+        draw_weighted_flux(i)
 
-    for dt in [dt1, dt2, dt3]:
-        new_mlat, new_mlt = np.meshgrid(np.linspace(60, 80, 40), np.linspace(2, 6, 30))
+    #for dt in [dt1, dt2, dt3]:
+    #   new_mlat, new_mlt = np.meshgrid(np.linspace(60, 80, 40), np.linspace(2, 6, 30))
         #fiN = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
         #fiN.savefig('ovation_conductance_interp_N_{0}.png'.format(dt.strftime(tfmt)))
 
@@ -197,7 +202,7 @@ if __name__=='__main__':
         #f2S = draw_conductance(dt, 'S')
         #f2S.savefig('ovation_conductance_S_{0}.png'.format(dt.strftime(tfmt)))
 
-        f1 = draw_weighted_flux(dt)
+        #f1 = draw_weighted_flux(dt)
         #f1.savefig('ovation_combflux_{0}_{1}_{2}.png'.format(atype, jtype, dt.strftime(tfmt)))
 
         #f3, f4 = draw_seasonal_flux(seasonN=seasonN, seasonS=seasonS, atype=atype, jtype=jtype)
